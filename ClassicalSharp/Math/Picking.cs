@@ -87,8 +87,12 @@ namespace ClassicalSharp {
 				t.Block = insideMap ?
 					InsideGetBlock(game.World, x, y, z) : OutsideGetBlock(game.World, x, y, z, pOrigin);
 				
-				Vector3 min = coords + BlockInfo.RenderMinBB[t.Block];
-				Vector3 max = coords + BlockInfo.RenderMaxBB[t.Block];
+				Vector3I coords2 = new Vector3I(t.X, t.Y, t.Z);
+				
+				//Vector3 min = coords + BlockInfo.RenderMinBB[t.Block];
+				//Vector3 max = coords + BlockInfo.RenderMaxBB[t.Block];
+				Vector3 min = coords + BlockInfo.GetMinBB(game, t.Block, coords2);
+				Vector3 max = coords + BlockInfo.GetMaxBB(game, t.Block, coords2);
 				
 				double dx = Math.Min(Math.Abs(origin.X - min.X), Math.Abs(origin.X - max.X));
 				double dy = Math.Min(Math.Abs(origin.Y - min.Y), Math.Abs(origin.Y - max.Y));

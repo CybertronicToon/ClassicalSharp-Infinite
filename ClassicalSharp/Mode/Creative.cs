@@ -75,12 +75,51 @@ namespace ClassicalSharp.Mode {
 		}
 		
 		public void PickRight(BlockID old, BlockID block, BlockID sel) {
+			if (SelRight(sel)) return;
+			
 			Vector3I pos = game.SelectedPos.TranslatedPos;
+			Vector3I posSel = game.SelectedPos.BlockPos;
+			
+			Console.WriteLine(game.World.SafeGetData(posSel.X, posSel.Y, posSel.Z));
+			
+			#if ALPHA
+			if (block == Block.Ladder) {
+				Vector3I posLeft = pos; posLeft.X += 1;
+				Vector3I posRight = pos; posRight.X -= 1;
+				Vector3I posBack = pos; posBack.Z += 1;
+				
+				game.World.ChunkHandler.SetDataSafe(pos.X, pos.Y, pos.Z, 0x0);
+				if (posSel == posLeft) game.World.ChunkHandler.SetDataSafe(pos.X, pos.Y, pos.Z, 0x4);
+				if (posSel == posRight) game.World.ChunkHandler.SetDataSafe(pos.X, pos.Y, pos.Z, 0x5);
+				if (posSel == posBack) game.World.ChunkHandler.SetDataSafe(pos.X, pos.Y, pos.Z, 0x3);
+			} else if (block == Block.RedstoneTorchOff || block == Block.RedstoneTorchOn||
+			           block == Block.Torch) {
+				Vector3I posLeft = pos; posLeft.X += 1;
+				Vector3I posRight = pos; posRight.X -= 1;
+				Vector3I posBack = pos; posBack.Z += 1;
+				Vector3I posFront = pos; posFront.Z -= 1;
+				
+				game.World.ChunkHandler.SetDataSafe(pos.X, pos.Y, pos.Z, 0x5);
+				if (posSel == posLeft) game.World.ChunkHandler.SetDataSafe(pos.X, pos.Y, pos.Z, 0x2);
+				if (posSel == posRight) game.World.ChunkHandler.SetDataSafe(pos.X, pos.Y, pos.Z, 0x1);
+				if (posSel == posBack) game.World.ChunkHandler.SetDataSafe(pos.X, pos.Y, pos.Z, 0x3);
+				if (posSel == posFront) game.World.ChunkHandler.SetDataSafe(pos.X, pos.Y, pos.Z, 0x4);
+			} else {
+				game.World.ChunkHandler.SetDataSafe(pos.X, pos.Y, pos.Z, 0x0);
+			}
+			#endif
+			
 			game.UpdateBlock(pos.X, pos.Y, pos.Z, block);
 			game.UserEvents.RaiseBlockChanged(pos, old, block);
 		}
 		
-		public bool SelRight(BlockID sel) { return false; }
+		public bool SelRight(BlockID sel) {
+			/*if (sel == Block.Wood) {
+				game.Gui.SetNewScreen(new SurvivalInventoryScreen(game));
+				return true;
+			}*/
+			return false;
+		}
 
 		public Widget MakeHotbar() { return new HotbarWidget(game); }		
 		

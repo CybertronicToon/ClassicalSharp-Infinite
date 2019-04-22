@@ -100,6 +100,11 @@ namespace ClassicalSharp.Renderers {
 			Player p = game.LocalPlayer;
 			Vector3 eyePos = p.EyePosition;
 			
+			int adjCamX, adjCamZ;
+			game.Camera.GetCamChunk(out adjCamX, out adjCamZ);
+			eyePos.X -= adjCamX;
+			eyePos.Z -= adjCamZ;
+			
 			Matrix4 m, lookAt;
 			Matrix4.LookAt(eyePos, eyePos - Vector3.UnitZ, Vector3.UnitY, out lookAt);
 			Matrix4.Mult(out m, ref lookAt, ref game.Camera.tiltM);
@@ -110,6 +115,11 @@ namespace ClassicalSharp.Renderers {
 			// Based off details from http://pastebin.com/KFV0HkmD (Thanks goodlyay!)
 			Player p = game.LocalPlayer;
 			held.Position = p.EyePosition;
+			
+			int adjCamX, adjCamZ;
+			game.Camera.GetCamChunk(out adjCamX, out adjCamZ);
+			held.Position.X -= adjCamX;
+			held.Position.Z -= adjCamZ;
 			
 			held.Position.X -= game.Camera.bobbingHor;
 			held.Position.Y -= game.Camera.bobbingVer;

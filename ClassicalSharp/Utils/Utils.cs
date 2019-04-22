@@ -221,6 +221,37 @@ namespace ClassicalSharp {
 			}
 			return value;
 		}
+		
+		public static void FlipBounds(Vector3 oldMin, Vector3 oldMax,
+		                              out Vector3 newMin, out Vector3 newMax, byte dir) {
+			newMin = Vector3.Zero;
+			newMax = Vector3.One;
+			if (dir <= 0 || dir >= 4) {
+				newMin = oldMin;
+				newMax = oldMax;
+			} else if (dir == 1) {
+				newMin.X = 1 - oldMax.Z;
+				newMax.X = 1 - oldMin.Z;
+				newMin.Y = oldMin.Y;
+				newMax.Y = oldMax.Y;
+				newMax.Z = 1 - oldMin.X;
+				newMin.Z = 1 - oldMax.X;
+			} else if (dir == 2) {
+				newMin.X = 1 - oldMax.X;
+				newMax.X = 1 - oldMin.X;
+				newMin.Y = oldMin.Y;
+				newMax.Y = oldMax.Y;
+				newMin.Z = 1 - oldMax.Z;
+				newMax.Z = 1 - oldMin.Z;
+			} else if (dir == 3) {
+				newMin.X = oldMin.Z;
+				newMax.X = oldMax.Z;
+				newMin.Y = oldMin.Y;
+				newMax.Y = oldMax.Y;
+				newMin.Z = 1 - oldMax.X;
+				newMax.Z = 1 - oldMin.X;
+			}
+		}
 
 #if !LAUNCHER
 		// Not all languages use . as their decimal point separator

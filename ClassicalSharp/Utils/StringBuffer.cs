@@ -43,6 +43,10 @@ namespace ClassicalSharp {
 			return this;
 		}
 		
+		/*public StringBuffer AppendNum(float num) {
+			return this;
+		}*/
+		
 		public StringBuffer AppendPaddedNum(int minDigits, int num) {
 			for (int i = 0; i < minDigits; i++)
 				numBuffer[i] = '0';

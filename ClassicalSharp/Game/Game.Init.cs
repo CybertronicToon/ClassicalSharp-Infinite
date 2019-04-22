@@ -240,6 +240,8 @@ namespace ClassicalSharp {
 			
 			AddScheduledTask(defTicks, ParticleManager.Tick);
 			AddScheduledTask(defTicks, Animations.Tick);
+			
+			AddScheduledTask(defTicks, Gui.statusScreen.Tick);
 		}
 	}
 }

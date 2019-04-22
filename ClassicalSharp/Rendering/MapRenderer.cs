@@ -13,7 +13,7 @@ namespace ClassicalSharp.Renderers {
 	public class ChunkInfo {
 		
 		public ushort CentreX, CentreY, CentreZ;
-		public bool Visible, Empty, PendingDelete, AllAir;
+		public bool Visible, Empty, PendingDelete, ForceDelete, AllAir;
 		
 		public bool DrawLeft, DrawRight, DrawFront, DrawBack, DrawBottom, DrawTop;
 		#if OCCLUSION
@@ -90,18 +90,23 @@ namespace ClassicalSharp.Renderers {
 			for (int x = 0; x < length; x++) {
 				for (int z = 0; z < length; z++) {
 					int newX = curX - adjX;
+					Console.WriteLine(adjX);
 					int newZ = curZ - adjZ;
-					if (newX > 0 && newZ > 0 && newX < length && newZ < length) {
+					if (newX >= 0 && newZ >= 0 && newX < length && newZ < length) {
 						for (int y = 0; y < 8; y++) {
 							ChunkInfo info = GetChunk(curX, y, curZ);
 							if (info == null) continue;
+							info.CentreX += (ushort)(16 * adjX);
+							info.CentreZ += (ushort)(16 * adjZ);
 							info.Reset(newX * 16, y * 16, newZ * 16);
 							SetChunk(newX, y, newZ, info);
-							SetChunk(curX, y, curZ, null);
+							//SetChunk(curX, y, curZ, null);
+							MarkDeleteChunk(curX, y, curZ);
 						}
 					} else {
 						for (int y = 0; y < 8; y++) {
-							SetChunk(curX, y, curZ, null);
+							//SetChunk(curX, y, curZ, null);
+							MarkDeleteChunk(curX, y, curZ);
 						}
 					}
 					if (zNeg) {
@@ -119,7 +124,7 @@ namespace ClassicalSharp.Renderers {
 				if (zNeg) curZ = length - 1;
 			}
 			updater.chunkPos = new Vector3I(0, 0, 0);
-			//ChunkSorter.UpdateSortOrder(game, updater);
+			ChunkSorter.UpdateSortOrder(game, updater);
 		}
 			
 		
@@ -132,6 +137,19 @@ namespace ClassicalSharp.Renderers {
 			if (info.AllAir) return; // do not recreate chunks completely air
 			info.Empty = false;
 			info.PendingDelete = true;
+		}
+		
+		public void MarkDeleteChunk(int cx, int cy, int cz) {
+			if (cx < 0 || cy < 0 || cz < 0 ||
+			    cx >= chunksX || cy >= chunksY || cz >= chunksZ) return;
+			
+			ChunkInfo info = unsortedChunks[cx + chunksX * (cy + cz * chunksY)];
+			//if (info.AllAir) return; // do not recreate chunks completely air
+			info.Empty = false;
+			info.PendingDelete = true;
+			//info.TranslucentParts = null;
+			//info.NormalParts = null;
+			//info.LiquidParts = null;
 		}
 		
 		/// <summary> Potentially generates meshes for several pending chunks. </summary>

@@ -271,6 +271,7 @@ namespace ClassicalSharp.GraphicsAPI {
 			if (draw == DrawType.Translucent)      AlphaBlending = true;
 			if (draw == DrawType.Transparent)      AlphaTest = true;
 			if (draw == DrawType.TransparentThick) AlphaTest = true;
+			if (draw == DrawType.Always)           AlphaTest = true;
 			if (draw == DrawType.Sprite)           AlphaTest = true;
 		}
 		
@@ -278,6 +279,7 @@ namespace ClassicalSharp.GraphicsAPI {
 			if (draw == DrawType.Translucent)      AlphaBlending = false;
 			if (draw == DrawType.Transparent)      AlphaTest = false;
 			if (draw == DrawType.TransparentThick) AlphaTest = false;
+			if (draw == DrawType.Always)           AlphaTest = false;
 			if (draw == DrawType.Sprite)           AlphaTest = false;
 		}
 	}

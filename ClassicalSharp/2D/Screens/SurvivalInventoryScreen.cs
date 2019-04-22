@@ -14,6 +14,8 @@ namespace ClassicalSharp.Gui.Screens {
 			font = new Font(game.FontName, 16);
 			HandlesAllInput = true;
 		}
+		
+		public int tableSize = 4;
 
 		public override void Init() {
 			InitTableWidget();
@@ -31,7 +33,10 @@ namespace ClassicalSharp.Gui.Screens {
 			posAtlas.Pack("0123456789", font, "f");
 			table.posAtlas = posAtlas;
 			table.ElementsPerRow = 9;
-			table.CraftingItems = new Item[9];
+			#if !ALPHA
+			if (tableSize == 4) tableSize = 9;
+			#endif
+			table.CraftingItems = new Item[tableSize];
 			table.Init();
 		}
 		

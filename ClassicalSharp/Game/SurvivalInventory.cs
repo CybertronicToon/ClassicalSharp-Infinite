@@ -59,7 +59,7 @@ namespace ClassicalSharp {
 			if (item == null) {
 				int index = NextFreeSlot();
 				if (index < ItemList.Length && index != -1) {
-					ItemList[index] = new Item(Count, (byte)index, id);
+					ItemList[index] = new Item(Count, id);
 					return 0;
 				}
 				return Count;
@@ -128,7 +128,7 @@ namespace ClassicalSharp {
 			this.game = game;
 			//this.ItemList = new List<Item>();
 			this.ItemList = new Item[36];
-			Item item = new Item(10, 0, Block.TNT);
+			Item item = new Item(10, Block.TNT);
 			ItemList[8] = item;
 		}
 		
@@ -142,24 +142,25 @@ namespace ClassicalSharp {
 	}
 	
 	public sealed class Item {
-		public Item(sbyte c, byte s, BlockID id) {
+		public Item(short c, BlockID id) {
 			this.id = id;
 			Count = c;
 			isBlock = true;
 		}
-		public Item(sbyte c, byte s, BlockID id, bool isBlock) {
+		public Item(short c, ushort id, bool isBlock) {
 			this.id = id;
 			Count = c;
-			isBlock = isBlock;
+			this.isBlock = isBlock;
 		}
 		public Item(Item item) {
 			this.id = item.id;
 			this.Count = item.Count;
+			this.Damage = Damage;
 			this.isBlock = item.isBlock;
 		}
-		public sbyte Count;
-		//public byte Slot;
-		public BlockID id;
+		public short Count;
+		public short Damage;
+		public ushort id;
 		public bool isBlock;
 	}
 }

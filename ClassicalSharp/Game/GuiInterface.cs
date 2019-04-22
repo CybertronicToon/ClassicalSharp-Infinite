@@ -12,7 +12,7 @@ namespace ClassicalSharp {
 		
 		public int GuiTex, GuiClassicTex, IconsTex;
 		Game game;
-		StatusScreen statusScreen;
+		public StatusScreen statusScreen;
 		internal HudScreen hudScreen;
 		internal Screen activeScreen;
 		internal List<Overlay> overlays = new List<Overlay>();

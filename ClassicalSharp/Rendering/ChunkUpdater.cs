@@ -292,10 +292,12 @@ namespace ClassicalSharp.Renderers {
 					DeleteChunk(info); continue;
 				}
 				noData |= info.PendingDelete;
+				bool forceDel = info.ForceDelete;
 				
-				if (noData && distSqr <= viewDistSqr && chunkUpdates < chunksTarget) {
+				if ((noData && distSqr <= viewDistSqr && chunkUpdates < chunksTarget) || forceDel) {
 					DeleteChunk(info);
 					BuildChunk(info, ref chunkUpdates);
+					info.ForceDelete = false;
 				}
 				info.Visible = distSqr <= viewDistSqr &&
 					game.Culling.SphereInFrustum(info.CentreX, info.CentreY, info.CentreZ, 14); // 14 ~ sqrt(3 * 8^2)

@@ -126,7 +126,7 @@ namespace ClassicalSharp.Map {
 
 		public override int LightCol(int x, int y, int z) {
 			return y > GetLightHeight(x, z) ? Outside : shadow;
-			if (y >= game.World.MaxY) return Outside;
+			//if (y >= game.World.MaxY) return Outside;
 			/*int lightloc = (y * length + z) * width + x;
 			byte light = GetHighestLight(lightloc);
 			return ySidesTop[light];*/
@@ -274,8 +274,8 @@ namespace ClassicalSharp.Map {
 					ushort block = game.World.GetBlock(x - 1, y, z);
 					int blockLoc = (y * length + z) * width + (x - 1);
 					byte blockLevel = GetLightFromSun(blockLoc);
-					byte lFac = 1; // Lighting factor
-					if (block == Block.Water || block == Block.StillWater || block == Block.Ice) lFac = 2;
+					//byte lFac = 1; // Lighting factor
+					//if (block == Block.Water || block == Block.StillWater || block == Block.Ice) lFac = 2;
 					if (blockLevel != 0 && blockLevel < curLight) {
 						SetLightFromSun(blockLoc, 0);
 						SunLightRemovalQueue.Enqueue(new LightObj(blockLoc, blockLevel));
@@ -287,8 +287,8 @@ namespace ClassicalSharp.Map {
 					ushort block = game.World.GetBlock(x + 1, y, z);
 					int blockLoc = (y * length + z) * width + (x + 1);
 					byte blockLevel = GetLightFromSun(blockLoc);
-					byte lFac = 1; // Lighting factor
-					if (block == Block.Water || block == Block.StillWater || block == Block.Ice) lFac = 2;
+					//byte lFac = 1; // Lighting factor
+					//if (block == Block.Water || block == Block.StillWater || block == Block.Ice) lFac = 2;
 					if (blockLevel != 0 && blockLevel < curLight) {
 						SetLightFromSun(blockLoc, 0);
 						SunLightRemovalQueue.Enqueue(new LightObj(blockLoc, blockLevel));
@@ -300,8 +300,8 @@ namespace ClassicalSharp.Map {
 					ushort block = game.World.GetBlock(x, y, z - 1);
 					int blockLoc = ((y * length + (z - 1)) * width + x);
 					byte blockLevel = GetLightFromSun(blockLoc);
-					byte lFac = 1; // Lighting factor
-					if (block == Block.Water || block == Block.StillWater || block == Block.Ice) lFac = 2;
+					//byte lFac = 1; // Lighting factor
+					//if (block == Block.Water || block == Block.StillWater || block == Block.Ice) lFac = 2;
 					if (blockLevel != 0 && blockLevel < curLight) {
 						SetLightFromSun(blockLoc, 0);
 						SunLightRemovalQueue.Enqueue(new LightObj(blockLoc, blockLevel));
@@ -313,8 +313,8 @@ namespace ClassicalSharp.Map {
 					ushort block = game.World.GetBlock(x, y, z + 1);
 					int blockLoc = ((y * length + (z + 1)) * width + x);
 					byte blockLevel = GetLightFromSun(blockLoc);
-					byte lFac = 1; // Lighting factor
-					if (block == Block.Water || block == Block.StillWater || block == Block.Ice) lFac = 2;
+					//byte lFac = 1; // Lighting factor
+					//if (block == Block.Water || block == Block.StillWater || block == Block.Ice) lFac = 2;
 					if (blockLevel != 0 && blockLevel < curLight) {
 						SetLightFromSun(blockLoc, 0);
 						SunLightRemovalQueue.Enqueue(new LightObj(blockLoc, blockLevel));
@@ -326,8 +326,8 @@ namespace ClassicalSharp.Map {
 					ushort block = game.World.GetBlock(x, y - 1, z);
 					int blockLoc = (((y - 1) * length + z) * width + x);
 					byte blockLevel = GetLightFromSun(blockLoc);
-					byte lFac = 1; // Lighting factor
-					if (block == Block.Water || block == Block.StillWater || block == Block.Ice) lFac = 2;
+					//byte lFac = 1; // Lighting factor
+					//if (block == Block.Water || block == Block.StillWater || block == Block.Ice) lFac = 2;
 					if (blockLevel != 0 && blockLevel < curLight) {
 						SetLightFromSun(blockLoc, 0);
 						SunLightRemovalQueue.Enqueue(new LightObj(blockLoc, blockLevel));
@@ -342,8 +342,8 @@ namespace ClassicalSharp.Map {
 					ushort block = game.World.GetBlock(x, y + 1, z);
 					int blockLoc = (((y + 1) * length + z) * width + x);
 					byte blockLevel = GetLightFromSun(blockLoc);
-					byte lFac = 1; // Lighting factor
-					if (block == Block.Water || block == Block.StillWater || block == Block.Ice) lFac = 2;
+					//byte lFac = 1; // Lighting factor
+					//if (block == Block.Water || block == Block.StillWater || block == Block.Ice) lFac = 2;
 					if (blockLevel != 0 && blockLevel < curLight) {
 						SetLightFromSun(blockLoc, 0);
 						SunLightRemovalQueue.Enqueue(new LightObj(blockLoc, blockLevel));
@@ -647,8 +647,8 @@ namespace ClassicalSharp.Map {
 					ushort block = game.World.GetBlock(x - 1, y, z);
 					int blockLoc = (y * length + z) * width + (x - 1);
 					byte blockLevel = GetLightFromBlock(blockLoc);
-					byte lFac = 1; // Lighting factor
-					if (block == Block.Water || block == Block.StillWater || block == Block.Ice) lFac = 2;
+					//byte lFac = 1; // Lighting factor
+					//if (block == Block.Water || block == Block.StillWater || block == Block.Ice) lFac = 2;
 					if (blockLevel != 0 && blockLevel < curLight) {
 						SetLightFromBlock(blockLoc, 0);
 						BlockLightRemovalQueue.Enqueue(new LightObj(blockLoc, blockLevel));
@@ -660,8 +660,8 @@ namespace ClassicalSharp.Map {
 					ushort block = game.World.GetBlock(x + 1, y, z);
 					int blockLoc = (y * length + z) * width + (x + 1);
 					byte blockLevel = GetLightFromBlock(blockLoc);
-					byte lFac = 1; // Lighting factor
-					if (block == Block.Water || block == Block.StillWater || block == Block.Ice) lFac = 2;
+					//byte lFac = 1; // Lighting factor
+					//if (block == Block.Water || block == Block.StillWater || block == Block.Ice) lFac = 2;
 					if (blockLevel != 0 && blockLevel < curLight) {
 						SetLightFromBlock(blockLoc, 0);
 						BlockLightRemovalQueue.Enqueue(new LightObj(blockLoc, blockLevel));
@@ -673,8 +673,8 @@ namespace ClassicalSharp.Map {
 					ushort block = game.World.GetBlock(x, y, z - 1);
 					int blockLoc = ((y * length + (z - 1)) * width + x);
 					byte blockLevel = GetLightFromBlock(blockLoc);
-					byte lFac = 1; // Lighting factor
-					if (block == Block.Water || block == Block.StillWater || block == Block.Ice) lFac = 2;
+					//byte lFac = 1; // Lighting factor
+					//if (block == Block.Water || block == Block.StillWater || block == Block.Ice) lFac = 2;
 					if (blockLevel != 0 && blockLevel < curLight) {
 						SetLightFromBlock(blockLoc, 0);
 						BlockLightRemovalQueue.Enqueue(new LightObj(blockLoc, blockLevel));
@@ -686,8 +686,8 @@ namespace ClassicalSharp.Map {
 					ushort block = game.World.GetBlock(x, y, z + 1);
 					int blockLoc = ((y * length + (z + 1)) * width + x);
 					byte blockLevel = GetLightFromBlock(blockLoc);
-					byte lFac = 1; // Lighting factor
-					if (block == Block.Water || block == Block.StillWater || block == Block.Ice) lFac = 2;
+					//byte lFac = 1; // Lighting factor
+					//if (block == Block.Water || block == Block.StillWater || block == Block.Ice) lFac = 2;
 					if (blockLevel != 0 && blockLevel < curLight) {
 						SetLightFromBlock(blockLoc, 0);
 						BlockLightRemovalQueue.Enqueue(new LightObj(blockLoc, blockLevel));
@@ -699,8 +699,8 @@ namespace ClassicalSharp.Map {
 					ushort block = game.World.GetBlock(x, y - 1, z);
 					int blockLoc = (((y - 1) * length + z) * width + x);
 					byte blockLevel = GetLightFromBlock(blockLoc);
-					byte lFac = 1; // Lighting factor
-					if (block == Block.Water || block == Block.StillWater || block == Block.Ice) lFac = 2;
+					//byte lFac = 1; // Lighting factor
+					//if (block == Block.Water || block == Block.StillWater || block == Block.Ice) lFac = 2;
 					if (blockLevel != 0 && blockLevel < curLight) {
 						SetLightFromBlock(blockLoc, 0);
 						BlockLightRemovalQueue.Enqueue(new LightObj(blockLoc, blockLevel));
@@ -712,8 +712,8 @@ namespace ClassicalSharp.Map {
 					ushort block = game.World.GetBlock(x, y + 1, z);
 					int blockLoc = (((y + 1) * length + z) * width + x);
 					byte blockLevel = GetLightFromBlock(blockLoc);
-					byte lFac = 1; // Lighting factor
-					if (block == Block.Water || block == Block.StillWater || block == Block.Ice) lFac = 2;
+					//byte lFac = 1; // Lighting factor
+					//if (block == Block.Water || block == Block.StillWater || block == Block.Ice) lFac = 2;
 					if (blockLevel != 0 && blockLevel < curLight) {
 						SetLightFromBlock(blockLoc, 0);
 						BlockLightRemovalQueue.Enqueue(new LightObj(blockLoc, blockLevel));

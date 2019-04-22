@@ -19,8 +19,8 @@ namespace ClassicalSharp.Map {
 			int newHeight = heightmap[index] + 1;
 			RefreshAffected(x, y, z, newBlock, lightH + 1, newHeight);
 			
-			byte newSunLight = 15;
-			/*if (BlockInfo.BlocksLight[newBlock] || newBlock == Block.Leaves) {
+			/*byte newSunLight = 15;
+			if (BlockInfo.BlocksLight[newBlock] || newBlock == Block.Leaves) {
 				byte val = GetLightFromSun(((y * length + z) * width + x));
 				SunLightRemovalQueue.Enqueue(new LightObj(((y * length + z) * width + x), val));
 				SetLightFromSun(((y * length + z) * width + x), 0);

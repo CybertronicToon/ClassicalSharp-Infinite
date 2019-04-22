@@ -28,69 +28,69 @@ namespace ClassicalSharp.Singleplayer {
 			physics.OnRandomTick[Block.BrownMushroom] = HandleMushroom;
 		}
 		
-		void HandleSapling(int index, BlockRaw block) {
-			int x = index % map.Width;
-			int y = (index / map.Width) / map.Length;
-			int z = (index / map.Width) % map.Length;
+		void HandleSapling(Vector3I pos, BlockRaw block) {
+			//int x = index % map.Width;
+			//int y = (index / map.Width) / map.Length;
+			//int z = (index / map.Width) % map.Length;
 			
 			BlockRaw below = Block.Air;
-			if (y > 0) below = map.blocks1[index - map.Width * map.Length];
-			if (below == Block.Grass) GrowTree(x, y, z);
+			if (pos.Y > 0) below = (BlockRaw)map.GetBlock(pos.X, pos.Y - 1, pos.Z);
+			if (below == Block.Grass) GrowTree(pos.X, pos.Y, pos.Z);
 		}
 		
-		void HandleDirt(int index, BlockRaw block) {
-			int x = index % map.Width;
-			int y = (index / map.Width) / map.Length;
-			int z = (index / map.Width) % map.Length;
+		void HandleDirt(Vector3I pos, BlockRaw block) {
+			//int x = index % map.Width;
+			//int y = (index / map.Width) / map.Length;
+			//int z = (index / map.Width) % map.Length;
 			
-			if (game.Lighting.IsLit(x, y, z))
-				game.UpdateBlock(x, y, z, Block.Grass);
+			if (game.Lighting.IsLit(pos.X, pos.Y, pos.Z))
+				game.UpdateBlock(pos.X, pos.Y, pos.Z, Block.Grass);
 		}
 		
-		void HandleGrass(int index, BlockRaw block) {
-			int x = index % map.Width;
-			int y = (index / map.Width) / map.Length;
-			int z = (index / map.Width) % map.Length;
+		void HandleGrass(Vector3I pos, BlockRaw block) {
+			//int x = index % map.Width;
+			//int y = (index / map.Width) / map.Length;
+			//int z = (index / map.Width) % map.Length;
 			
-			if (!game.Lighting.IsLit(x, y, z))
-				game.UpdateBlock(x, y, z, Block.Dirt);
+			if (!game.Lighting.IsLit(pos.X, pos.Y, pos.Z))
+				game.UpdateBlock(pos.X, pos.Y, pos.Z, Block.Dirt);
 		}
 		
-		void HandleFlower(int index, BlockRaw block) {
-			int x = index % map.Width;
-			int y = (index / map.Width) / map.Length;
-			int z = (index / map.Width) % map.Length;
+		void HandleFlower(Vector3I pos, BlockRaw block) {
+			//int x = index % map.Width;
+			//int y = (index / map.Width) / map.Length;
+			//int z = (index / map.Width) % map.Length;
 			
-			if (!game.Lighting.IsLit(x, y, z)) {
-				game.UpdateBlock(x, y, z, Block.Air);
-				physics.ActivateNeighbours(x, y, z, index);
+			if (!game.Lighting.IsLit(pos.X, pos.Y, pos.Z)) {
+				game.UpdateBlock(pos.X, pos.Y, pos.Z, Block.Air);
+				physics.ActivateNeighbours(pos.X, pos.Y, pos.Z, 0);
 				return;
 			}
 			
 			BlockRaw below = Block.Dirt;
-			if (y > 0) below = map.blocks1[index - map.Width * map.Length];
+			if (pos.Y > 0) below = (BlockRaw)map.GetBlock(pos.X, pos.Y - 1, pos.Z);
 			if (!(below == Block.Dirt || below == Block.Grass)) {
-				game.UpdateBlock(x, y, z, Block.Air);
-				physics.ActivateNeighbours(x, y, z, index);
+				game.UpdateBlock(pos.X, pos.Y, pos.Z, Block.Air);
+				physics.ActivateNeighbours(pos.X, pos.Y, pos.Z, 0);
 			}
 		}
 		
-		void HandleMushroom(int index, BlockRaw block) {
-			int x = index % map.Width;
-			int y = (index / map.Width) / map.Length;
-			int z = (index / map.Width) % map.Length;
+		void HandleMushroom(Vector3I pos, BlockRaw block) {
+			//int x = index % map.Width;
+			//int y = (index / map.Width) / map.Length;
+			//int z = (index / map.Width) % map.Length;
 			
-			if (game.Lighting.IsLit(x, y, z)) {
-				game.UpdateBlock(x, y, z, Block.Air);
-				physics.ActivateNeighbours(x, y, z, index);
+			if (game.Lighting.IsLit(pos.X, pos.Y, pos.Z)) {
+				game.UpdateBlock(pos.X, pos.Y, pos.Z, Block.Air);
+				physics.ActivateNeighbours(pos.X, pos.Y, pos.Z, 0);
 				return;
 			}
 			
 			BlockRaw below = Block.Stone;
-			if (y > 0) below = map.blocks1[index - map.Width * map.Length];
+			if (pos.Y > 0) below = (BlockRaw)map.GetBlock(pos.X, pos.Y - 1, pos.Z);
 			if (!(below == Block.Stone || below == Block.Cobblestone)) {
-				game.UpdateBlock(x, y, z, Block.Air);
-				physics.ActivateNeighbours(x, y, z, index);
+				game.UpdateBlock(pos.X, pos.Y, pos.Z, Block.Air);
+				physics.ActivateNeighbours(pos.X, pos.Y, pos.Z, 0);
 			}
 		}
 		

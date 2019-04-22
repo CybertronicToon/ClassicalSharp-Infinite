@@ -34,6 +34,8 @@ namespace ClassicalSharp {
 		public const byte Gas = 4;		
 		/// <summary> Block renders as an X sprite (e.g. sapling). Pixels are either fully visible or invisible. </summary>
 		public const byte Sprite = 5;
+		/// <summary> Block will always render. </summary>
+		public const byte Always = 6;
 	}
 	
 	/// <summary> Describes the interaction a block has with a player when they collide with it. </summary>
@@ -200,6 +202,30 @@ namespace ClassicalSharp {
 				MaxBB[block].Y = DefaultSet.Height(block);
 			}
 			
+			#if ALPHA
+			if (block == Block.SugarCane) {
+				MinBB[block] = Vector3.Zero;
+				MaxBB[block] = Vector3.One;
+			} else if (block == Block.Torch ||
+			           block == Block.RedstoneTorchOff || block == Block.RedstoneTorchOn) {
+				MinBB[block] = new Vector3(7f/16f, 0, 7f/16f);
+				MaxBB[block] = new Vector3(9f/16f, 10f/16f, 9f/16f);
+			} else if (block == Block.Ladder) {
+				MinBB[block] = new Vector3(0, 0, 0);
+				MaxBB[block] = new Vector3(1, 1, 2/16f);
+			} else if (block == Block.StonePressurePlate || block == Block.WoodPressurePlate) {
+				MinBB[block] = new Vector3(1/16f, 0, 1/16f);
+				MaxBB[block] = new Vector3(15/16f, 1/16f, 15/16f);
+			} else if (block == Block.Cactus) {
+				MinBB[block] = new Vector3(1/16f, 0, 1/16f);
+				MaxBB[block] = new Vector3(15/16f, 1, 15/16f);
+			} else if (block == Block.Fence) {
+				MinBB[block] = new Vector3(6/16f, 0, 6/16f);
+				MaxBB[block] = new Vector3(10/16f,1, 10/16f);
+			}
+			CanStretch[Block.Redstone] = 0;
+			#endif
+			
 			SetBlockDraw(block, Draw[block]);
 			CalcRenderBounds(block);
 			LightOffset[block] = CalcLightOffset(block);
@@ -219,6 +245,14 @@ namespace ClassicalSharp {
 				SetTex(topTex[block], Side.Top, block);
 				SetTex(bottomTex[block], Side.Bottom, block);
 				SetSide(sideTex[block], block);
+				#if ALPHA
+				if (block == Block.Chest) {
+					SetTex(27, Side.Back, block);
+				} else if (block == Block.CraftingTable) {
+					SetTex(59, Side.Back, block);
+					SetTex(59, Side.Right, block);
+				}
+				#endif
 			}
 		}
 
@@ -276,6 +310,7 @@ namespace ClassicalSharp {
 			return textures[block * Side.Sides + face];
 		}
 		
+		#if !ALPHA
 		static byte[] topTex = new byte[] { 0,  1,  0,  2, 16,  4, 15, 17, 14, 14, 
 			30, 30, 18, 19, 32, 33, 34, 21, 22, 48, 49, 64, 65, 66, 67, 68, 69, 70, 71, 
 			72, 73, 74, 75, 76, 77, 78, 79, 13, 12, 29, 28, 24, 23,  6,  6,  7,  9,  4, 
@@ -287,7 +322,24 @@ namespace ClassicalSharp {
 		static byte[] bottomTex = new byte[] { 0,  1,  2,  2, 16,  4, 15, 17, 14, 14, 
 			30, 30, 18, 19, 32, 33, 34, 21, 22, 48, 49, 64, 65, 66, 67, 68, 69, 70, 71, 
 			72, 73, 74, 75, 76, 77, 78, 79, 13, 12, 29, 28, 56, 55,  6,  6,  7, 10,  4, 
-			36, 37, 16, 11, 57, 50, 38, 80, 81, 82, 83, 84, 51, 54, 86, 58, 53, 52 };	
+			36, 37, 16, 11, 57, 50, 38, 80, 81, 82, 83, 84, 51, 54, 86, 58, 53, 52, };	
+		#else
+		static byte[] topTex = new byte[] { 0,  1,  0,  2, 16,  4, 15, 17, 14, 14, 
+			30, 30, 18, 19, 32, 33, 34, 21, 52, 48, 49, 64, 65, 66, 67, 68, 69, 70, 71, 
+			72, 73, 74, 75, 76, 77, 78, 79, 13, 12, 29, 28, 24, 23,  6,  6,  7,  9,  4, 
+			36, 37, 80, 31, 65,  4, 25, 84, 50, 24, 43, 88, 87,  1,  1,  4, 97, 83,128, 16, 
+			 4, 96,  1, 98,  4, 51, 51,115, 99,  1, 66, 67, 66, 69, 72, 73, 75,  4, };
+		static byte[] sideTex = new byte[] { 0,  1,  3,  2, 16,  4, 15, 17, 14, 14, 
+			30, 30, 18, 19, 32, 33, 34, 20, 52, 48, 49, 64, 65, 66, 67, 68, 69, 70, 71, 
+			72, 73, 74, 75, 76, 77, 78, 79, 13, 12, 29, 28, 40, 39,  5,  5,  7,  8, 35, 
+			36, 37, 80, 31, 65,  4, 26, 84, 50, 40, 60, 88,  2, 44, 61,  4, 97, 83,128, 16, 
+			 4, 96,  1, 98,  4, 51, 51,115, 99,  1, 66, 67, 66, 70, 72, 73, 74,  4, };
+		static byte[] bottomTex = new byte[] { 0,  1,  2,  2, 16,  4, 15, 17, 14, 14, 
+			30, 30, 18, 19, 32, 33, 34, 21, 52, 48, 49, 64, 65, 66, 67, 68, 69, 70, 71, 
+			72, 73, 74, 75, 76, 77, 78, 79, 13, 12, 29, 28, 56, 55,  6,  6,  7, 10,  4, 
+			36, 37, 80, 31, 65,  4, 25, 84, 50, 56,  4, 88,  2,  1,  1,  4, 97, 83,128, 16, 
+			 4, 96,  1, 98,  4, 51, 51,115, 99,  1, 66, 67, 66, 71, 72, 73, 74,  4, };
+		#endif
 		
 
 		internal static void UpdateCulling() {
@@ -321,6 +373,13 @@ namespace ClassicalSharp {
 			} else {
 				CanStretch[block] &= 0xFC; // ~0x03
 			}
+			#if ALPHA
+			if (block == Block.Redstone || block == Block.Ladder) {
+				CanStretch[block] = 0;
+			} else if (block >= Block.Water && block <= Block.StillLava) {
+				CanStretch[block] = 0;
+			}
+			#endif
 		}
 		
 		static void CalcCulling(BlockID block, BlockID other) {
@@ -356,6 +415,9 @@ namespace ClassicalSharp {
 			// Sprite blocks can never hide faces.
 			if (Draw[block] == DrawType.Sprite) return false;
 			
+			// Never hide faces if DrawType is Always.
+			if (Draw[block] == DrawType.Always || Draw[other] == DrawType.Always) return false;
+			
 			// NOTE: Water is always culled by lava
 			if ((block == Block.Water || block == Block.StillWater) && (other == Block.Lava || other == Block.StillLava))
 				return true;
@@ -375,6 +437,83 @@ namespace ClassicalSharp {
 			byte bType = Collide[block], oType = Collide[other];
 			bool canSkip = (bType == CollideType.Solid && oType == CollideType.Solid) || bType != CollideType.Solid;
 			return canSkip;
+		}
+		
+		public static Vector3 GetMinBB(Game game, BlockID block, Vector3I coords) {
+			#if ALPHA
+			if (block == Block.Ladder) {
+				Vector3 newMin = Vector3.Zero;
+				Vector3 newMax = Vector3.One;
+				byte data = game.World.ChunkHandler.GetDataSafe(coords.X, coords.Y, coords.Z);
+				byte flip = 0;
+				if (data == 0x3) flip = 2;
+				if (data == 0x4) flip = 1;
+				if (data == 0x5) flip = 3;
+				Utils.FlipBounds(MinBB[block], MaxBB[block], out newMin, out newMax, flip);
+				return newMin;
+			} else if (block == Block.Fence) {
+				return Vector3.Zero;
+			} else if (block == Block.Torch ||
+			           block == Block.RedstoneTorchOff || block == Block.RedstoneTorchOn) {
+				Vector3 newMin = Vector3.Zero;
+				Vector3 newMax = Vector3.One;
+				byte data = game.World.ChunkHandler.GetDataSafe(coords.X, coords.Y, coords.Z);
+				byte flip = 0;
+				if (data == 0x3) flip = 2;
+				if (data == 0x2) flip = 1;
+				if (data == 0x1) flip = 3;
+				if (data >= 0x1 && data <= 0x4) {
+					newMin = new Vector3(5.75f/16f, 3.25f/16f, 0f);
+					newMax = new Vector3(10.25f/16f, 12.75f/16f, 4.75f/16f);
+					Utils.FlipBounds(newMin, newMax, out newMin, out newMax, flip);
+				} else {
+					newMin = MinBB[block];
+					newMin.X -= (2f/3f)/16f;
+					newMin.Z -= (2f/3f)/16f;
+				}
+				return newMin;
+			}
+			#endif
+			return MinBB[block];
+		}
+		
+		public static Vector3 GetMaxBB(Game game, BlockID block, Vector3I coords) {
+			#if ALPHA
+			if (block == Block.Ladder) {
+				Vector3 newMin = Vector3.Zero;
+				Vector3 newMax = Vector3.One;
+				byte data = game.World.ChunkHandler.GetDataSafe(coords.X, coords.Y, coords.Z);
+				byte flip = 0;
+				if (data == 0x3) flip = 2;
+				if (data == 0x4) flip = 1;
+				if (data == 0x5) flip = 3;
+				Utils.FlipBounds(MinBB[block], MaxBB[block], out newMin, out newMax, flip);
+				return newMax;
+			} else if (block == Block.Fence) {
+				return Vector3.One;
+			} else if (block == Block.Torch ||
+			           block == Block.RedstoneTorchOff || block == Block.RedstoneTorchOn) {
+				Vector3 newMin = Vector3.Zero;
+				Vector3 newMax = Vector3.One;
+				byte data = game.World.ChunkHandler.GetDataSafe(coords.X, coords.Y, coords.Z);
+				byte flip = 0;
+				if (data == 0x3) flip = 2;
+				if (data == 0x2) flip = 1;
+				if (data == 0x1) flip = 3;
+				if (data >= 0x1 && data <= 0x4) {
+					newMin = new Vector3(5.75f/16f, 3.25f/16f, 0f);
+					newMax = new Vector3(10.25f/16f, 12.75f/16f, 4.75f/16f);
+					Utils.FlipBounds(newMin, newMax, out newMin, out newMax, flip);
+				} else {
+					newMax = MaxBB[block];
+					newMax.X += (2f/3f)/16f;
+					newMax.Y -= (1f/3f)/16f;
+					newMax.Z += (2f/3f)/16f;
+				}
+				return newMax;
+			}
+			#endif
+			return MaxBB[block];
 		}
 		
 		/// <summary> Returns whether the face at the given face of the block

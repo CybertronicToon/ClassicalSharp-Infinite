@@ -210,7 +210,7 @@ namespace ClassicalSharp.Gui.Widgets {
 			
 			for (int i = 0; i < Inventory.BlocksPerRow; i++) {
 				if (game.SurvInv.ItemList[i] == null) continue;
-				BlockID block = game.SurvInv.ItemList[i].id;
+				BlockID block = (BlockID)game.SurvInv.ItemList[i].id;
 				int x = (int)(X + barXOffset + (elemSize + borderSize) * i + elemSize / 2);
 				int y = (int)(Y + (Height - barHeight / 2));
 				
@@ -229,7 +229,7 @@ namespace ClassicalSharp.Gui.Widgets {
 			
 			for (int i = 0; i < Inventory.BlocksPerRow; i++) {
 				if (game.SurvInv.ItemList[i] == null) continue;
-				BlockID block = game.SurvInv.ItemList[i].id;
+				BlockID block = (BlockID)game.SurvInv.ItemList[i].id;
 				if (BlockInfo.Draw[block] != DrawType.Sprite) continue;
 				int x = (int)(X + barXOffset + (elemSize + borderSize) * i + elemSize / 2);
 				int y = (int)(Y + (Height - barHeight));

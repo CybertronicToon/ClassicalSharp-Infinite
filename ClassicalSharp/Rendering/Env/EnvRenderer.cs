@@ -48,7 +48,7 @@ namespace ClassicalSharp.Renderers {
 			Vector3I coords = Vector3I.Floor(pos);
 			
 			//BlockID block = game.World.SafeGetBlock(coords);
-			BlockID block = game.World.SafeGetBlockAdj(coords);
+			BlockID block = game.World.SafeGetBlock(coords);
 			AABB blockBB = new AABB(
 				(Vector3)coords + BlockInfo.MinBB[block],
 				(Vector3)coords + BlockInfo.MaxBB[block]);

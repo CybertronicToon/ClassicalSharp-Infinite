@@ -21,11 +21,11 @@ namespace ClassicalSharp.Singleplayer {
 		
 		bool[] blocksTnt;
 		
-		void HandleTnt(int index, BlockRaw block) {
-			int x = index % map.Width;
-			int z = (index / map.Width) % map.Length;
-			int y = (index / map.Width) / map.Length;
-			Explode(4, x, y, z);
+		void HandleTnt(Vector3I pos, BlockRaw block) {
+			//int x = index % map.Width;
+			//int z = (index / map.Width) % map.Length;
+			//int y = (index / map.Width) / map.Length;
+			Explode(4, pos.X, pos.Y, pos.Z);
 		}
 		
 		public void Explode(int power, int x, int y, int z) {
@@ -47,7 +47,7 @@ namespace ClassicalSharp.Singleplayer {
 				if (!map.IsValidPos(xx, yy, zz)) continue;
 				index = (yy * map.Length + zz) * map.Width + xx;
 				
-				BlockRaw block = map.blocks1[index];
+				BlockRaw block = (BlockRaw)map.SafeGetBlock(xx, yy, zz);
 				if (block < Block.CpeCount && blocksTnt[block]) continue;		
 				
 				game.UpdateBlock(xx, yy, zz, Block.Air);				
@@ -73,6 +73,7 @@ namespace ClassicalSharp.Singleplayer {
 			blocksTnt[Block.Brick] = true;
 			blocksTnt[Block.MossyRocks] = true;
 			blocksTnt[Block.Obsidian] = true;
+			#if !ALPHA
 			// CPE guesses
 			blocksTnt[Block.CobblestoneSlab] = true;
 			blocksTnt[Block.Sandstone] = true;
@@ -81,6 +82,7 @@ namespace ClassicalSharp.Singleplayer {
 			blocksTnt[Block.Pillar] = true;
 			blocksTnt[Block.Crate] = true;
 			blocksTnt[Block.StoneBrick] = true;
+			#endif
 		}
 	}
 }

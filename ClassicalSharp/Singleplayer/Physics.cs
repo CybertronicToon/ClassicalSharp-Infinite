@@ -9,7 +9,7 @@ using BlockRaw = System.Byte;
 
 namespace ClassicalSharp.Singleplayer {
 	
-	public delegate void PhysicsAction(int index, BlockRaw block);
+	public delegate void PhysicsAction(Vector3I pos, BlockRaw block);
 	
 	public struct PhysicsTick {
 		public Vector3I Position;
@@ -52,7 +52,7 @@ namespace ClassicalSharp.Singleplayer {
 		bool enabled = true;
 		public bool Enabled {
 			get { return enabled; }
-			set { enabled = value; liquid.Clear(); }
+			set { enabled = value; /*liquid.Clear();*/ }
 		}
 		
 		public PhysicsAction[] OnActivate = new PhysicsAction[Block.DefaultCount];
@@ -67,11 +67,11 @@ namespace ClassicalSharp.Singleplayer {
 			game.UserEvents.BlockChanged += BlockChanged;
 			enabled = Options.GetBool(OptionsKey.BlockPhysics, true);
 			
-			/*falling = new FallingPhysics(game, this);
+			falling = new FallingPhysics(game, this);
 			tnt = new TNTPhysics(game, this);
 			foliage = new FoliagePhysics(game, this);
 			liquid = new LiquidPhysics(game, this);
-			other = new OtherPhysics(game, this);*/
+			other = new OtherPhysics(game, this);
 		}
 		
 		public List<PhysicsTick> tickList = new List<PhysicsTick>();
@@ -147,29 +147,36 @@ namespace ClassicalSharp.Singleplayer {
 			
 			if (newB == Block.Air) {
 				PhysicsAction delete = OnDelete[oldB];
-				if (delete != null) delete(index, oldB);
+				if (delete != null) delete(p, oldB);
 			} else {
 				PhysicsAction place = OnPlace[newB];
-				if (place != null) place(index, newB);
+				if (place != null) place(p, newB);
 			}
 			ActivateNeighbours(p.X, p.Y, p.Z, index);
 		}
 		
 		/// <summary> Activates the direct neighbouring blocks of the given coordinates. </summary>
 		public void ActivateNeighbours(int x, int y, int z, int index) {
-			if (x > 0) Activate(index - 1);
-			if (x < map.MaxX) Activate(index + 1);
-			if (z > 0) Activate(index - map.Width);
-			if (z < map.MaxZ) Activate(index + map.Width);
-			if (y > 0) Activate(index - oneY);
-			if (y < map.MaxY) Activate(index + oneY);
+			Vector3I pos = new Vector3I(x, y, z);
+			Vector3I posLeft = new Vector3I(x - 1, y, z);
+			Vector3I posRight = new Vector3I(x + 1, y, z);
+			Vector3I posUp = new Vector3I(x, y + 1, z);
+			Vector3I posDown = new Vector3I(x, y - 1, z);
+			Vector3I posForward = new Vector3I(x, y, z - 1);
+			Vector3I posBackward = new Vector3I(x, y, z + 1);
+			if (x > 0) Activate(posLeft);
+			if (x < map.MaxX) Activate(posRight);
+			if (z > 0) Activate(posForward);
+			if (z < map.MaxZ) Activate(posBackward);
+			if (y > 0) Activate(posDown);
+			if (y < map.MaxY) Activate(posUp);
 		}
 		
 		/// <summary> Activates the block at the particular packed coordinates. </summary>
-		public void Activate(int index) {
-			BlockRaw block = map.blocks1[index];
+		public void Activate(Vector3I pos) {
+			BlockRaw block = (BlockRaw)map.SafeGetBlock(pos.X, pos.Y, pos.Z);
 			PhysicsAction activate = OnActivate[block];
-			if (activate != null) activate(index, block);
+			if (activate != null) activate(pos, block);
 		}
 		
 		bool IsEdgeWater(int x, int y, int z) {
@@ -211,17 +218,17 @@ namespace ClassicalSharp.Singleplayer {
 				int index = rnd.Next(lo, hi);
 				BlockRaw block = map.blocks1[index];
 				PhysicsAction tick = OnRandomTick[block];
-				if (tick != null) tick(index, block);
+				//if (tick != null) tick(index, block);
 				
 				index = rnd.Next(lo, hi);
 				block = map.blocks1[index];
 				tick = OnRandomTick[block];
-				if (tick != null) tick(index, block);
+				//if (tick != null) tick(index, block);
 				
 				index = rnd.Next(lo, hi);
 				block = map.blocks1[index];
 				tick = OnRandomTick[block];
-				if (tick != null) tick(index, block);
+				//if (tick != null) tick(index, block);
 			}
 		}
 	}

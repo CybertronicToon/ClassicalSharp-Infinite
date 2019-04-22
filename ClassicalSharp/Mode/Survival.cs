@@ -54,6 +54,7 @@ namespace ClassicalSharp.Mode {
 			blockList[Block.MossyRocks] = stoneTime;
 			blockList[Block.Obsidian] = 6.0f;
 			
+			#if !ALPHA
 			blockList[Block.CobblestoneSlab] = stoneTime;
 			blockList[Block.Sandstone] = stoneTime;
 			blockList[Block.Snow] = leafTime;
@@ -65,6 +66,7 @@ namespace ClassicalSharp.Mode {
 			blockList[Block.Pillar] = stoneTime;
 			blockList[Block.Crate] = woodTime;
 			blockList[Block.StoneBrick] = stoneTime;
+			#endif
 		}
 		
 		bool pickingBlock = false;
@@ -107,8 +109,8 @@ namespace ClassicalSharp.Mode {
 			int headX = Utils.Floor(p.EyePosition.X);
 			int headY = Utils.Floor(p.EyePosition.Y);
 			int headZ = Utils.Floor(p.EyePosition.Z);
-			if (game.World.IsValidPos(headX, headY, headZ)) {
-				BlockID headBlock = game.World.ChunkHandler.GetBlock(headX, headY, headZ);
+			//if (game.World.IsValidPos(headX, headY, headZ)) {
+				BlockID headBlock = game.World.ChunkHandler.GetBlockAdjSafe(headX, headY, headZ);
 				bool headInWater = (headBlock == Block.Water || headBlock == Block.StillWater);
 				if (headInWater && p.Air != 0) {
 					widget.inWater = true;
@@ -126,11 +128,11 @@ namespace ClassicalSharp.Mode {
 					p.Air = 300;
 					drownTimer = 0;
 				}
-			} else {
+			/*} else {
 				widget.inWater = false;
 				p.Air = 300;
 				drownTimer = 0;
-			}
+			}*/
 			if (p.TouchesAnyLava()) {
 				if (lavaTimer == 0) {
 					p.Damage(10);
@@ -287,10 +289,14 @@ namespace ClassicalSharp.Mode {
 		}
 		
 		public bool SelRight(BlockID sel) {
-			/*if (sel == Block.Wood) {
-				game.Gui.SetNewScreen(new SurvivalInventoryScreen(game));
+			#if ALPHA
+			if (sel == Block.CraftingTable) {
+				SurvivalInventoryScreen screen = new SurvivalInventoryScreen(game);
+				screen.tableSize = 9;
+				game.Gui.SetNewScreen(screen);
 				return true;
-			}*/
+			}
+			#endif
 			return false;
 		}
 		
@@ -335,11 +341,17 @@ namespace ClassicalSharp.Mode {
 		
 		
 		void HandleDelete(BlockID old, Vector3I pos) {
+			pos = game.World.ChunkHandler.ReverseAdjCoords(pos);
 			Vector3 posVec = new Vector3(pos.X + 0.5f, pos.Y + 0.5f, pos.Z + 0.5f);
 			if (old == Block.Log) {
-				SpawnItem(Block.Wood, (byte)rnd.Next(3, 6), posVec);
+				//SpawnItem(Block.Wood, (byte)rnd.Next(3, 6), posVec);
+				SpawnItem(Block.Log, 1, posVec);
 			} else if (old == Block.CoalOre) {
+				#if !ALPHA
 				SpawnItem(Block.Magma, 1, posVec);
+				#else
+				SpawnItem(Block.Slab, (byte)rnd.Next(1, 4), posVec);
+				#endif
 			} else if (old == Block.IronOre) {
 				SpawnItem(Block.Iron, 1, posVec);
 			} else if (old == Block.GoldOre) {
@@ -361,8 +373,8 @@ namespace ClassicalSharp.Mode {
 		
 		void SpawnItem(BlockID item, byte count, Vector3 pos) {
 			if (!game.Server.IsSinglePlayer) {
-				game.SurvInv.TryAddItem((sbyte)count, item);
-				return;
+			game.SurvInv.TryAddItem((sbyte)count, item);
+			return;
 			}
 			int id = game.Entities.NextFreeID();
 			if (id == -1) {

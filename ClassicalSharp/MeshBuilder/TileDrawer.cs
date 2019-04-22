@@ -122,7 +122,15 @@ namespace ClassicalSharp {
 			} else {
 				part = isTranslucent ? translucentParts[i] : normalParts[i];
 			}
+			#if ALPHA
+			if (block == Block.Fence) {
+				part.vCount[face] += 4 * 9;
+			} else {
+				part.vCount[face] += 4;
+			}
+			#else
 			part.vCount[face] += 4;
+			#endif
 		}
 		
 		static JavaRandom spriteRng = new JavaRandom(0);
@@ -133,6 +141,14 @@ namespace ClassicalSharp {
 			
 			float x1 = X + 2.50f/16, y1 = Y,     z1 = Z + 2.50f/16;
 			float x2 = X + 13.5f/16, y2 = Y + 1, z2 = Z + 13.5f/16;
+			
+			#if ALPHA
+			if (curBlock == Block.SugarCane) {
+				x1 = X + 0.750f/16; y1 = Y;     z1 = Z + 0.750f/16;
+				x2 = X + 15.25f/16; y2 = Y + 1; z2 = Z + 15.25f/16;
+			}
+			#endif
+			
 			const float u1 = 0, u2 = 15.99f/16f;
 			float v1 = vOrigin, v2 = vOrigin + invVerElementSize * 15.99f/16f;
 			

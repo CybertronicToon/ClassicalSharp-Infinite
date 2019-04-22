@@ -191,9 +191,20 @@ namespace ClassicalSharp.Entities {
 						v.X = x;
 						
 						BlockID block = game.World.GetBlockAdj(x, y, z);
-						blockBB.Min = v + BlockInfo.MinBB[block];
-						blockBB.Max = v + BlockInfo.MaxBB[block];
-						
+						Vector3 blockMin = BlockInfo.MinBB[block];
+						Vector3 blockMax = BlockInfo.MaxBB[block];
+						#if ALPHA
+						byte data = game.World.ChunkHandler.GetDataAdjSafe(x, y, z);
+						if (block == Block.Ladder) {
+							byte flip = 0;
+							if (data == 0x3) flip = 2;
+							if (data == 0x4) flip = 1;
+							if (data == 0x5) flip = 3;
+							Utils.FlipBounds(blockMin, blockMax, out blockMin, out blockMax, flip);
+						}
+						#endif
+						blockBB.Min = v + blockMin;
+						blockBB.Max = v + blockMax;
 						if (!blockBB.Intersects(bounds)) continue;
 						if (condition(block)) return true;
 					}

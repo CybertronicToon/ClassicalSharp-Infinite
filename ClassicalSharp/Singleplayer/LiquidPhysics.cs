@@ -26,20 +26,20 @@ namespace ClassicalSharp.Singleplayer {
 			this.physics = physics;
 			map = game.World;
 			
-			physics.OnPlace[Block.Lava] = OnPlaceLava;
-			physics.OnPlace[Block.Water] = OnPlaceWater;
-			physics.OnPlace[Block.Sponge] = PlaceSponge;
-			physics.OnDelete[Block.Sponge] = DeleteSponge;
+			//physics.OnPlace[Block.Lava] = OnPlaceLava;
+			//physics.OnPlace[Block.Water] = OnPlaceWater;
+			//physics.OnPlace[Block.Sponge] = PlaceSponge;
+			//physics.OnDelete[Block.Sponge] = DeleteSponge;
 			
 			physics.OnActivate[Block.Water] = physics.OnPlace[Block.Water];
 			physics.OnActivate[Block.StillWater] = physics.OnPlace[Block.Water];
 			physics.OnActivate[Block.Lava] = physics.OnPlace[Block.Lava];
 			physics.OnActivate[Block.StillLava] = physics.OnPlace[Block.Lava];
 			
-			physics.OnRandomTick[Block.Water] = ActivateWater;
-			physics.OnRandomTick[Block.StillWater] = ActivateWater;
-			physics.OnRandomTick[Block.Lava] = ActivateLava;
-			physics.OnRandomTick[Block.StillLava] = ActivateLava;
+			//physics.OnRandomTick[Block.Water] = ActivateWater;
+			//physics.OnRandomTick[Block.StillWater] = ActivateWater;
+			//physics.OnRandomTick[Block.Lava] = ActivateLava;
+			//physics.OnRandomTick[Block.StillLava] = ActivateLava;
 		}
 		
 		//void OnPlaceLava(int index, BlockRaw b) { Lava.Enqueue(defLavaTick | (uint)index); }

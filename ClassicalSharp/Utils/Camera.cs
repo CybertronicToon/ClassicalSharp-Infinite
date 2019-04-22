@@ -12,6 +12,8 @@ namespace ClassicalSharp {
 		protected internal Matrix4 tiltM;
 		internal float bobbingVer, bobbingHor;
 		
+		public bool absolute = false;
+		
 		/// <summary> Calculates the projection matrix for this camera. </summary>
 		public abstract void GetProjection(out Matrix4 m);
 		
@@ -53,6 +55,11 @@ namespace ClassicalSharp {
 		public virtual void GetCamChunk(out int camAdjX, out int camAdjZ) {
 			camAdjX = 0;
 			camAdjZ = 0;
+		}
+		
+		public virtual void AdjCamChunk(ref float camX, ref float camZ) {
+			camX = camX;
+			camZ = camZ;
 		}
 		
 		/// <summary> Adjusts the head X rotation of the player to avoid looking straight up or down. </summary>
@@ -113,14 +120,23 @@ namespace ClassicalSharp {
 		}
 		
 		public override void GetCamChunk(out int camAdjX, out int camAdjZ) {
-			int curChunkX = 4;
-			int curChunkY = 4;
+			if (absolute) {
+				camAdjX = 0;
+				camAdjZ = 0;
+				return;
+			}
+			int chunkAdj = 4;
+			if (game.World.ChunkHandler != null && game.World.ChunkHandler.ChunkArray != null) {
+				chunkAdj = (game.World.ChunkHandler.ChunkArray.GetLength(0) / 2);
+			}
+			int curChunkX = chunkAdj;
+			int curChunkY = chunkAdj;
 			if (game.World.ChunkHandler != null) {
 				curChunkX = game.World.ChunkHandler.curChunkX ;
 				curChunkY = game.World.ChunkHandler.curChunkY;
 			}
-			curChunkX -= 4;
-			curChunkY -= 4;
+			curChunkX -= chunkAdj;
+			curChunkY -= chunkAdj;
 			camAdjX = curChunkX * 16;
 			//if (curChunkX < -4) camAdjX += 1;
 			camAdjZ = curChunkY * 16;
@@ -219,6 +235,11 @@ namespace ClassicalSharp {
 			Vector3 eyePos = player.EyePosition;
 			eyePos.Y += bobbingVer;
 			
+			int adjCamX, adjCamZ;
+			GetCamChunk(out adjCamX, out adjCamZ);
+			eyePos.X -= adjCamX;
+			eyePos.Z -= adjCamZ;
+			
 			Matrix4 lookAt;
 			Matrix4.LookAt(camPos, eyePos, Vector3.UnitY, out lookAt);
 			Matrix4.Mult(out m, ref lookAt, ref tiltM);
@@ -235,6 +256,11 @@ namespace ClassicalSharp {
 			Vector3 eyePos = player.EyePosition;
 			eyePos.Y += bobbingVer;
 			
+			int adjCamX, adjCamZ;
+			GetCamChunk(out adjCamX, out adjCamZ);
+			eyePos.X -= adjCamX;
+			eyePos.Z -= adjCamZ;
+			
 			Vector3 dir = GetDirVector();
 			if (!forward) dir = -dir;
 			Picking.ClipCameraPos(game, eyePos, dir, dist, game.CameraClipPos);
@@ -250,9 +276,24 @@ namespace ClassicalSharp {
 			Vector3 camPos = game.CurrentCameraPos;
 			Vector3 dir = GetDirVector();
 			
+			
+			Vector3 eyePos = player.EyePosition;
+			eyePos.Y += bobbingVer;
+			
+			int adjCamX, adjCamZ;
+			GetCamChunk(out adjCamX, out adjCamZ);
+			eyePos.X -= adjCamX;
+			eyePos.Z -= adjCamZ;
+			
+			Matrix4 translate, cam;
+			Matrix4.Translate(out translate, 0f, 0f, -0.1f);
+			
 			Matrix4 lookAt;
 			Matrix4.LookAt(camPos, camPos + dir, Vector3.UnitY, out lookAt);
-			Matrix4.Mult(out m, ref lookAt, ref tiltM);
+			Matrix4.Mult(out cam, ref lookAt, ref translate);
+			Matrix4.Mult(out m, ref cam, ref tiltM);
+			//Matrix4.Mult(out cam, ref lookAt, ref tiltM);
+			//Matrix4.Mult(out m, ref cam, ref translate);
 		}
 		
 		public override Vector2 GetCameraOrientation() {

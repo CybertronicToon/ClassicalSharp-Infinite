@@ -59,7 +59,7 @@ namespace ClassicalSharp.Gui.Screens {
 			gfx.Texturing = false;
 		}
 		
-		const int chExtent = 16, chWeight = 2;
+		/*const int chExtent = 16, chWeight = 2;
 		static TextureRec chRec = new TextureRec(0, 0, 15/256f, 15/256f);
 		void DrawCrosshairs() {			
 			if (game.Gui.IconsTex <= 0) return;
@@ -69,6 +69,50 @@ namespace ClassicalSharp.Gui.Screens {
 			Texture chTex = new Texture(game.Gui.IconsTex, cenX - extent,
 			                            cenY - extent, extent * 2, extent * 2, chRec);
 			chTex.Render(game.Graphics);
+		}*/
+		
+		const int chExtent = 16, chWeight = 2;
+		const int chAdd = 24;
+		const int barSize = 22;
+		static TextureRec chRec = new TextureRec(0, 0, 16/256f, 16/256f);
+		void DrawCrosshairs() {			
+			if (game.Gui.IconsTex <= 0) return;
+			game.Graphics.AlphaTest = true;
+			game.Graphics.RGBAlphaBlendFunc(BlendFunc.InvDestColor, BlendFunc.Zero, BlendFunc.SourceAlpha, BlendFunc.InvSourceAlpha);
+			
+			int scale = Utils.Floor(2 * (game.Height / 480f));
+			if (scale <= 0) scale = 1;
+			int cenX = game.Width;
+			int cenY = game.Height;
+			//int cenXInit = ((((int)cenX) / (scale * 2)) * (scale * 2));
+			//int cenYInit = ((((int)cenY) / (scale * 2)) * (scale * 2));
+			//int cenXInit = (int)(Math.Round((double)cenX / (scale * 2)) * (scale * 2));
+			//int cenYInit = (int)(Math.Round((double)cenY / (scale * 2)) * (scale * 2));
+			//int cenXInit = (int)((float)(cenX + (scale * 2) - 1) / (float)(scale * 2) * (float)(scale * 2));
+			//int cenYInit = (int)((float)(cenY + (scale * 2) - 1) / (float)(scale * 2) * (float)(scale * 2));
+			int cenXInit = ((cenX + (scale * 2) - 1) / (scale * 2)) * (scale * 2);
+			int cenYInit = ((cenY + (scale * 2) - 1) / (scale * 2)) * (scale * 2);
+			int guiCenX = cenXInit / scale;
+			int guiCenY = cenYInit / scale;
+			guiCenX = (int)Math.Round((double)guiCenX / 2);
+			guiCenY = (int)Math.Round((double)guiCenY / 2);
+			cenX = guiCenX * scale;
+			cenY = guiCenY * scale;
+			/*Console.WriteLine("cenX: " + cenX);
+			Console.WriteLine((cenX % (scale * 2)));
+			cenX += (cenX % (scale * 2));
+			Console.WriteLine("cenX 2: " + cenX);
+			cenY += (cenY % (scale * 2));
+			cenX /= 2;
+			cenY /= 2;*/
+			int extent = (int)(chExtent * scale);
+			int guiSub = extent + (int)(chAdd * scale) + (int)(barSize * scale);
+			int numY = ((cenYInit - guiSub) / 2) + (chAdd * scale);
+			Texture chTex = new Texture(game.Gui.IconsTex, cenX - (extent / 2),
+			                            numY, extent, extent, chRec);
+			chTex.Render(game.Graphics);
+			game.Graphics.AlphaBlendFunc(BlendFunc.SourceAlpha, BlendFunc.InvSourceAlpha);
+			game.Graphics.AlphaTest = false;
 		}
 		
 		bool hadPlayerList;

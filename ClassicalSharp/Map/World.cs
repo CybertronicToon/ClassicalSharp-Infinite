@@ -51,9 +51,11 @@ namespace ClassicalSharp.Map {
 			Length = length; MaxZ = length - 1;
 			
 			if (ChunkHandler == null) {
+				game.LocalPlayer.Position = new Vector3((width / 2), 128, (width / 2));
 				ChunkHandler = new ChunkHandler(Width, game);
 				ChunkHandler.GenInitialChunks(seed, width);
 			} else {
+				game.LocalPlayer.Position = new Vector3((width / 2), 128, (width / 2));
 				ChunkHandler.GenInitialChunks(seed, width);
 			}
 			
@@ -106,7 +108,7 @@ namespace ClassicalSharp.Map {
 			return (BlockID)((blocks1[i] | (blocks2[i] << 8)) & BlockInfo.MaxDefined);
 			#else
 			//return blocks1[i];
-			return ChunkHandler.GetBlockAdjUnsafe(x, y, z);
+			return ChunkHandler.GetBlockAdjSafe(x, y, z);
 			#endif
 		}
 		
@@ -128,14 +130,34 @@ namespace ClassicalSharp.Map {
 			return (BlockID)((blocks1[i] | (blocks2[i] << 8)) & BlockInfo.MaxDefined);
 			#else
 			//return blocks1[i];
-			return ChunkHandler.GetBlockAdjUnsafe(p.X, p.Y, p.Z);
+			return ChunkHandler.GetBlockAdjSafe(p.X, p.Y, p.Z);
 			#endif
 		}
 		
 		/// <summary> Returns the block at the given world coordinates with bounds checking,
 		/// returning 0 is the coordinates were outside the map. </summary>
+		public BlockID SafeGetBlock(int x, int y, int z) {
+			//return IsValidPos(p.X, p.Y, p.Z) ? GetBlock(p) : Block.Air;
+			return ChunkHandler.GetBlockSafe(x, y, z);
+		}
+		
+		/// <summary> Returns the metadata at the given world coordinates with bounds checking,
+		/// returning 0 is the coordinates were outside the map. </summary>
+		public byte SafeGetData(int x, int y, int z) {
+			//return IsValidPos(p.X, p.Y, p.Z) ? GetBlock(p) : Block.Air;
+			return ChunkHandler.GetDataSafe(x, y, z);
+		}
+		
+		public void SafeSetData(int x, int y, int z, byte data) {
+			//return IsValidPos(p.X, p.Y, p.Z) ? GetBlock(p) : Block.Air;
+			ChunkHandler.SetDataSafe(x, y, z, data);
+		}
+		
+		/// <summary> Returns the block at the given world coordinates with bounds checking,
+		/// returning 0 is the coordinates were outside the map. </summary>
 		public BlockID SafeGetBlock(Vector3I p) {
-			return IsValidPos(p.X, p.Y, p.Z) ? GetBlock(p) : Block.Air;
+			//return IsValidPos(p.X, p.Y, p.Z) ? GetBlock(p) : Block.Air;
+			return ChunkHandler.GetBlockSafe(p.X, p.Y, p.Z);
 		}
 		
 		public BlockID SafeGetBlockAdj(Vector3I p) {
@@ -178,7 +200,7 @@ namespace ClassicalSharp.Map {
 			return (BlockID)((blocks1[i] | (blocks2[i] << 8)) & BlockInfo.MaxDefined);
 			#else
 			//return blocks1[i];
-			return ChunkHandler.GetBlockAdjUnsafe(x, y, z);
+			return ChunkHandler.GetBlockAdjSafe(x, y, z);
 			#endif
 		}
 	}

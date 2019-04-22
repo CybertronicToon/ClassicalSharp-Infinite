@@ -5,6 +5,7 @@ using ClassicalSharp.Entities;
 using ClassicalSharp.GraphicsAPI;
 using ClassicalSharp.Gui.Widgets;
 using ClassicalSharp.Network;
+using OpenTK;
 #if ANDROID
 using Android.Graphics;
 #endif
@@ -13,10 +14,11 @@ namespace ClassicalSharp.Gui.Screens {
 	public class StatusScreen : Screen, IGameComponent {
 		
 		Font font;
-		StringBuffer statusBuffer;
+		StringBuffer statusBuffer, posBuffer;
 		
 		public StatusScreen(Game game) : base(game) {
 			statusBuffer = new StringBuffer(128);
+			posBuffer = new StringBuffer(128);
 		}
 
 		public void Init(Game game) { }
@@ -25,7 +27,7 @@ namespace ClassicalSharp.Gui.Screens {
 		public void OnNewMap(Game game) { }
 		public void OnNewMapLoaded(Game game) { }
 		
-		TextWidget status, hackStates;
+		TextWidget status, hackStates, xPos, yPos, zPos;
 		TextAtlas posAtlas;
 		public override void Render(double delta) {
 			UpdateStatus(delta);
@@ -35,14 +37,54 @@ namespace ClassicalSharp.Gui.Screens {
 			
 			if (!game.ClassicMode && game.Gui.activeScreen == null) {
 				if (HacksChanged()) { UpdateHackState(); }
-				DrawPosition();
+				//DrawPosition();
 				hackStates.Render(delta);
 			}
+			
+			xPos.Render(delta);
+			yPos.Render(delta);
+			zPos.Render(delta);
 			game.Graphics.Texturing = false;
+		}
+		
+		public void Tick(ScheduledTask task) {
+			UpdatePos();
 		}
 		
 		double accumulator;
 		int frames;
+
+		private static readonly string _allFloatDigits = "0." + new string('#', 60);
+		
+		void UpdatePos() {
+			int len = 99;
+			Vector3 pos = game.LocalPlayer.Position;
+			Vector3I posI = Vector3I.Floor(game.LocalPlayer.Position);
+			
+			string xStr = pos.X.ToString(_allFloatDigits);
+			xStr = pos.X.ToString("G" + len.ToString());
+			if (xStr.Contains("E")) {
+				xStr = pos.X.ToString(_allFloatDigits);
+			}
+			posBuffer.Clear().Append("X: ").Append(xStr);
+			xPos.SetText(posBuffer.ToString());
+			
+			string yStr = pos.Y.ToString(_allFloatDigits);
+			yStr = pos.Y.ToString("G" + len.ToString());
+			if (yStr.Contains("E")) {
+				yStr = pos.Y.ToString(_allFloatDigits);
+			}
+			posBuffer.Clear().Append("Y: ").Append(yStr);
+			yPos.SetText(posBuffer.ToString());
+			
+			string zStr = pos.Z.ToString(_allFloatDigits);
+			zStr = pos.Z.ToString("G" + len.ToString());
+			if (zStr.Contains("E")) {
+				zStr = pos.Z.ToString(_allFloatDigits);
+			}
+			posBuffer.Clear().Append("Z: ").Append(zStr);
+			zPos.SetText(posBuffer.ToString());
+		}
 		
 		void UpdateStatus(double delta) {
 			frames++;
@@ -86,6 +128,9 @@ namespace ClassicalSharp.Gui.Screens {
 			status.Dispose();
 			posAtlas.Dispose();
 			hackStates.Dispose();
+			xPos.Dispose();
+			yPos.Dispose();
+			zPos.Dispose();
 		}
 		
 		protected override void ContextRecreated() {
@@ -100,12 +145,33 @@ namespace ClassicalSharp.Gui.Screens {
 			posAtlas.Pack("0123456789-, ()", font, "Position: ");
 			posAtlas.tex.Y = (short)(status.Height + 2);
 			
-			int yOffset = status.Height + posAtlas.tex.Height + 2;
+			int yOffset = status.Height + 2;
 			hackStates = new TextWidget(game, font)
 				.SetLocation(Anchor.Min, Anchor.Min, 2, yOffset);
 			hackStates.ReducePadding = true;
 			hackStates.Init();
 			UpdateHackState();
+			
+			yOffset += hackStates.Height + posAtlas.tex.Height;
+			xPos = new TextWidget(game, font)
+				.SetLocation(Anchor.Min, Anchor.Min, 2, yOffset);
+			xPos.ReducePadding = false;
+			xPos.Init();
+			xPos.SetText("X: 0");
+			
+			yOffset += xPos.Height;
+			yPos = new TextWidget(game, font)
+				.SetLocation(Anchor.Min, Anchor.Min, 2, yOffset);
+			yPos.ReducePadding = false;
+			yPos.Init();
+			yPos.SetText("Y: 0");
+			
+			yOffset += xPos.Height;
+			zPos = new TextWidget(game, font)
+				.SetLocation(Anchor.Min, Anchor.Min, 2, yOffset);
+			zPos.ReducePadding = false;
+			zPos.Init();
+			zPos.SetText("Z: 0");
 		}
 		
 		public override void Dispose() {

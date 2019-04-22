@@ -87,7 +87,7 @@ namespace ClassicalSharp.Gui.Widgets {
 				
 				BlockID block;
 				if (game.SurvInv.ItemList[i] != null) {
-					block = game.SurvInv.ItemList[i].id;
+					block = (BlockID)game.SurvInv.ItemList[i].id;
 				} else {
 					block = Block.Air;
 				}
@@ -105,7 +105,7 @@ namespace ClassicalSharp.Gui.Widgets {
 				
 				BlockID block;
 				if (CraftingItems[i] != null) {
-					block = CraftingItems[i].id;
+					block = (BlockID)CraftingItems[i].id;
 				} else {
 					block = Block.Air;
 				}
@@ -123,7 +123,7 @@ namespace ClassicalSharp.Gui.Widgets {
 				
 				BlockID block;
 				if (CraftedItem != null) {
-					block = CraftedItem.id;
+					block = (BlockID)CraftedItem.id;
 				} else {
 					block = Block.Air;
 				}
@@ -138,7 +138,7 @@ namespace ClassicalSharp.Gui.Widgets {
 				
 				BlockID block;
 				if (game.SurvInv.ItemList[SelectedIndex] != null) {
-					block = game.SurvInv.ItemList[SelectedIndex].id;
+					block = (BlockID)game.SurvInv.ItemList[SelectedIndex].id;
 				} else {
 					block = Block.Air;
 				}
@@ -151,7 +151,7 @@ namespace ClassicalSharp.Gui.Widgets {
 				
 				BlockID block;
 				if (CraftingItems[SelectedIndex] != null) {
-					block = CraftingItems[SelectedIndex].id;
+					block = (BlockID)CraftingItems[SelectedIndex].id;
 				} else {
 					block = Block.Air;
 				}
@@ -164,7 +164,7 @@ namespace ClassicalSharp.Gui.Widgets {
 				
 				BlockID block;
 				if (CraftedItem != null) {
-					block = CraftedItem.id;
+					block = (BlockID)CraftedItem.id;
 				} else {
 					block = Block.Air;
 				}
@@ -549,13 +549,13 @@ namespace ClassicalSharp.Gui.Widgets {
 					return true;
 				} else if (itemList[SelectedIndex] == null &&
 				           cursorItem != null) {
-					itemList[SelectedIndex] = new Item(1, 0, cursorItem.id);
+					itemList[SelectedIndex] = new Item(1, cursorItem.id);
 					cursorItem.Count -= 1;
 					if (cursorItem.Count == 0) cursorItem = null;
 					return true;
 				}
 				if (itemList[SelectedIndex] != null && cursorItem == null) {
-					item = new Item(1, 0, itemList[SelectedIndex].id);
+					item = new Item(1, itemList[SelectedIndex].id);
 					cursorItem = item;
 					itemList[SelectedIndex].Count -= 1;
 					if (itemList[SelectedIndex].Count == 0)
@@ -583,14 +583,14 @@ namespace ClassicalSharp.Gui.Widgets {
 					return true;
 				} else if (CraftingItems[SelectedIndex] == null &&
 				           cursorItem != null) {
-					CraftingItems[SelectedIndex] = new Item(1, 0, cursorItem.id);
+					CraftingItems[SelectedIndex] = new Item(1, cursorItem.id);
 					cursorItem.Count -= 1;
 					if (cursorItem.Count == 0) cursorItem = null;
 					RecalcRecipe();
 					return true;
 				}
 				if (CraftingItems[SelectedIndex] != null && cursorItem == null) {
-					item = new Item(1, 0, CraftingItems[SelectedIndex].id);
+					item = new Item(1, CraftingItems[SelectedIndex].id);
 					cursorItem = item;
 					CraftingItems[SelectedIndex].Count -= 1;
 					if (CraftingItems[SelectedIndex].Count == 0)
@@ -706,7 +706,7 @@ namespace ClassicalSharp.Gui.Widgets {
 			BlockID[] BlockList2 = CraftingList2(ListOfItems);
 			BlockID[,] BlockList2D = CraftingDim(BlockList);
 			for (int i = 0; i < ListOfItems.Length; i++) {
-				if (ListOfItems[i] == null) ListOfItems[i] = new Item(0, 0, Block.Air);
+				if (ListOfItems[i] == null) ListOfItems[i] = new Item(0, Block.Air);
 			}
 			for (int i = 0; i < recipeList.Length; i++) {
 				if (recipeList[i].Shapeless == true) {
@@ -724,7 +724,7 @@ namespace ClassicalSharp.Gui.Widgets {
 					}
 					if (recipeMatch) {
 						if (BlockList2.Length > 0) Console.WriteLine(BlockList2[0]);
-						CraftedItem = new Item(recipeList[i].Count, 0, recipeList[i].Output);
+						CraftedItem = new Item(recipeList[i].Count, recipeList[i].Output);
 						RecipeIndex = i;
 						return;
 					}
@@ -737,7 +737,7 @@ namespace ClassicalSharp.Gui.Widgets {
 						if (BlockList2D[y, x] != recipeList[i].Pattern[y, x]) isMatch = false;
 					}
 					if (!isMatch) continue;
-					CraftedItem = new Item(recipeList[i].Count, 0, recipeList[i].Output);
+					CraftedItem = new Item(recipeList[i].Count, recipeList[i].Output);
 					RecipeIndex = i;
 					return;
 				}
@@ -837,7 +837,7 @@ namespace ClassicalSharp.Gui.Widgets {
 		}
 		
 		public Item NewItem(Item item) {
-			return new Item(item.Count, 0, item.id);
+			return new Item(item.Count, item.id);
 		}
 		
 		public override bool HandlesKeyDown(Key key) {

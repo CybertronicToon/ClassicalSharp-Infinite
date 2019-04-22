@@ -59,6 +59,8 @@ namespace ClassicalSharp {
 		public const BlockRaw MossyRocks = 48;
 		public const BlockRaw Obsidian = 49;
 		
+		#if !ALPHA
+		
 		public const BlockRaw CobblestoneSlab = 50;
 		public const BlockRaw Rope = 51;
 		public const BlockRaw Sandstone = 52;
@@ -75,7 +77,62 @@ namespace ClassicalSharp {
 		public const BlockRaw Pillar = 63;
 		public const BlockRaw Crate = 64;
 		public const BlockRaw StoneBrick = 65;
+		
+		#else
+		
+		public const BlockRaw Torch = 50;
+		public const BlockRaw Fire = 51;
+		public const BlockRaw MobSpawner = 52;
+		public const BlockRaw WoodStairs = 53;
+		public const BlockRaw Chest = 54;
+		public const BlockRaw Redstone = 55;
+		public const BlockRaw DiamondOre = 56;
+		public const BlockRaw DiamondBlock = 57;
+		public const BlockRaw CraftingTable = 58;
+		public const BlockRaw Wheat = 59;
+		public const BlockRaw FarmLand = 60;
+		public const BlockRaw Furnace = 61;
+		public const BlockRaw BurningFurnace = 62;
+		public const BlockRaw FloorSign = 63;
+		public const BlockRaw Door = 64;
+		public const BlockRaw Ladder = 65;
+		public const BlockRaw Rail = 66;
+		public const BlockRaw CobblestoneStairs = 67;
+		public const BlockRaw WallSign = 68;
+		public const BlockRaw Lever = 69;
+		public const BlockRaw StonePressurePlate = 70;
+		public const BlockRaw IronDoor = 71;
+		public const BlockRaw WoodPressurePlate = 72;
+		public const BlockRaw RedstoneOre = 73;
+		public const BlockRaw GlowingRedstoneOre = 74;
+		public const BlockRaw RedstoneTorchOff = 75;
+		public const BlockRaw RedstoneTorchOn = 76;
+		public const BlockRaw StoneButton = 77;
+		public const BlockRaw Snow = 78;
+		public const BlockRaw Ice = 79;
+		public const BlockRaw SnowBlock = 80;
+		public const BlockRaw Cactus = 81;
+		public const BlockRaw Clay = 82;
+		public const BlockRaw SugarCane = 83;
+		public const BlockRaw Jukebox = 84;
+		public const BlockRaw Fence = 85;
+		
+		#endif
+		
 #pragma warning restore 1591
+		
+		#if ALPHA
+		
+		public const string RawNames = "Air Stone Grass Dirt Cobblestone Wood Sapling Bedrock Water StillWater Lava" +
+			" StillLava Sand Gravel GoldOre IronOre CoalOre Log Leaves Sponge Glass Red Orange Yellow Lime Green" +
+			" Teal Aqua Cyan Blue Indigo Violet Magenta Pink Black Gray White Dandelion Rose BrownMushroom RedMushroom" +
+			" Gold Iron DoubleSlab Slab Brick TNT Bookshelf MossyRocks Obsidian Torch Fire MobSpawner WoodStairs Chest" +
+			" Redstone DiamondOre DiamondBlock CraftingTable Wheat Soil Furnace BurningFurnace FloorSign Door Ladder" +
+			" Rail CobblestoneStairs WallSign Lever StonePressurePlate IronDoor WoodPressurePlate RedstoneOre" +
+			" GlowingRedstoneOre RedstoneTorchOff RedstoneTorchOn StoneButton Snow Ice SnowBlock Cactus Clay SugarCane" +
+			" Jukebox Fence";
+		
+		#else
 		
 		public const string RawNames = "Air Stone Grass Dirt Cobblestone Wood Sapling Bedrock Water StillWater Lava" +
 			" StillLava Sand Gravel GoldOre IronOre CoalOre Log Leaves Sponge Glass Red Orange Yellow Lime Green" +
@@ -83,14 +140,21 @@ namespace ClassicalSharp {
 			" Gold Iron DoubleSlab Slab Brick TNT Bookshelf MossyRocks Obsidian CobblestoneSlab Rope Sandstone" +
 			" Snow Fire LightPink ForestGreen Brown DeepBlue Turquoise Ice CeramicTile Magma Pillar Crate StoneBrick";		
 		
+		#endif
+		
 		/// <summary> Max block ID used in original classic. </summary>
 		public const BlockRaw MaxOriginalBlock = Block.Obsidian;
 		
 		/// <summary> Number of blocks in original classic. </summary>
 		public const int OriginalCount = MaxOriginalBlock + 1;
 		
+		#if !ALPHA
 		/// <summary> Max block ID used in original classic plus CPE blocks. </summary>
 		public const BlockRaw MaxCpeBlock = Block.StoneBrick;
+		#else
+		/// <summary> Max block ID used in original classic plus CPE blocks. </summary>
+		public const BlockRaw MaxCpeBlock = Block.Fence;
+		#endif
 
 		/// <summary> Number of blocks in original classic plus CPE blocks. </summary>		
 		public const int CpeCount = MaxCpeBlock + 1;

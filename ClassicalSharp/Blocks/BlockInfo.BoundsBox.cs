@@ -64,6 +64,10 @@ namespace ClassicalSharp {
 			
 			MinBB[block] = Utils.RotateY(leftX - 0.5f, bottomY, 0, angle) + centre;
 			MaxBB[block] = Utils.RotateY(rightX - 0.5f, topY, 0, angle) + centre;
+			/*if (block == Block.SugarCane) {
+				MinBB[block] = Vector3.Zero;
+				MaxBB[block] = Vector3.One;
+			}*/
 			CalcRenderBounds(block);
 		}
 		

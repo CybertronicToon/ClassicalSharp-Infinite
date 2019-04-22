@@ -22,6 +22,10 @@ namespace ClassicalSharp.Events {
 		public event EventHandler TerrainAtlasChanged;
 		public void RaiseTerrainAtlasChanged() { Raise(TerrainAtlasChanged); }
 		
+		/// <summary> Raised when the item atlas ("items.png") is changed. </summary>
+		public event EventHandler ItemAtlasChanged;
+		public void RaiseItemAtlasChanged() { Raise(ItemAtlasChanged); }
+		
 		/// <summary> Raised when the texture pack is changed. </summary>
 		public event EventHandler TexturePackChanged;
 		public void RaiseTexturePackChanged() { Raise(TexturePackChanged); }

@@ -146,11 +146,15 @@ namespace ClassicalSharp.Renderers {
 		void RenderClouds(double delta) {
 			if (game.World.Env.CloudHeight < -2000) return;
 			double time = game.accumulator;
-			float offset = (float)(time / 2048f * 0.6f * map.Env.CloudsSpeed);
+			float posX = (game.World.ChunkHandler.curChunkX * 16f) / 2048f;
+			float posY = (game.World.ChunkHandler.curChunkY * 16f) / 2048f;
+			float offsetX = (float)(time / 2048f * 0.6f * map.Env.CloudsSpeed);
 			IGraphicsApi gfx = game.Graphics;
 			
+			Matrix4 xMat, yMat;
 			gfx.SetMatrixMode(MatrixType.Texture);
-			Matrix4 matrix = Matrix4.Identity; matrix.Row3.X = offset; // translate X axis
+			Matrix4 matrix = Matrix4.Identity; matrix.Row3.X = offsetX + posX; // translate X axis
+			matrix.Row3.Y = posY;
 			gfx.LoadMatrix(ref matrix);
 			gfx.SetMatrixMode(MatrixType.Modelview);
 			

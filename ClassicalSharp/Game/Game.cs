@@ -38,6 +38,10 @@ namespace ClassicalSharp {
 			TerrainAtlas1D.UpdateState();
 		}
 		
+		void LoadItemAtlas(Bitmap bmp) {
+			
+		}
+		
 		public bool ChangeTerrainAtlas(Bitmap atlas) {
 			if (!ValidateBitmap("terrain.png", atlas)) return false;
 			if (atlas.Width != atlas.Height) {
@@ -49,6 +53,20 @@ namespace ClassicalSharp {
 			
 			LoadAtlas(atlas);
 			Events.RaiseTerrainAtlasChanged();
+			return true;
+		}
+		
+		public bool ChangeItemAtlas(Bitmap atlas) {
+			if (!ValidateBitmap("items.png", atlas)) return false;
+			if (atlas.Width != atlas.Height) {
+				Chat.Add("&cUnable to use items.png from the texture pack.");
+				Chat.Add("&c Its width is not the same as its height.");
+				return false;
+			}
+			if (Graphics.LostContext) return false;
+			
+			LoadItemAtlas(atlas);
+			Events.RaiseItemAtlasChanged();
 			return true;
 		}
 		
@@ -80,10 +98,16 @@ namespace ClassicalSharp {
 			UpdateProjection();
 		}
 		
+		// Max distance = 1651910528;
+		
 		Stopwatch frameTimer = new Stopwatch();
 		internal void RenderFrame(double delta) {
 			frameTimer.Reset();
 			frameTimer.Start();
+			bool visible = Gui.activeScreen == null || !Gui.activeScreen.BlocksWorld;
+			if (visible) {
+				World.ChunkHandler.UpdateCurChunk();
+			}
 			
 			Graphics.BeginFrame(this);
 			Graphics.BindIb(defaultIb);
@@ -106,7 +130,7 @@ namespace ClassicalSharp {
 			CurrentCameraPos = Camera.GetCameraPos(t);
 			UpdateViewMatrix();
 			
-			bool visible = Gui.activeScreen == null || !Gui.activeScreen.BlocksWorld;
+			visible = Gui.activeScreen == null || !Gui.activeScreen.BlocksWorld;
 			if (!World.HasBlocks) visible = false;
 			if (visible) {
 				Render3D(delta, t);
@@ -136,15 +160,23 @@ namespace ClassicalSharp {
 		}
 		
 		void Render3D(double delta, float t) {
-			World.ChunkHandler.UpdateCurChunk();
 			if (SkyboxRenderer.ShouldRender)
 				SkyboxRenderer.Render(delta);
 			EnvRenderer.Render(delta);
 			AxisLinesRenderer.Render(delta);
+			
+			Camera.absolute = true;
+			CurrentCameraPos = Camera.GetCameraPos(t);
+			UpdateViewMatrix();
+			
 			Graphics.Lighting = true;
 			Entities.RenderModels(Graphics, delta, t);
 			Graphics.Lighting = false;
 			Entities.RenderNames(Graphics, delta);
+			
+			Camera.absolute = false;
+			CurrentCameraPos = Camera.GetCameraPos(t);
+			UpdateViewMatrix();
 			
 			ParticleManager.Render(delta, t);
 			Camera.GetPickedBlock(SelectedPos); // TODO: only pick when necessary

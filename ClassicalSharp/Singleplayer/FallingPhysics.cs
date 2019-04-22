@@ -32,29 +32,32 @@ namespace ClassicalSharp.Singleplayer {
 			oneY = width * length;
 		}
 
-		void DoFalling(int index, BlockRaw block) {
-			int found = -1, start = index;
+		void DoFalling(Vector3I pos, BlockRaw block) {
+			int start = pos.Y, y = pos.Y;
+			Vector3I found = new Vector3I(-1, -1, -1);
 			// Find lowest air block
-			while (index >= oneY) {
-				index -= oneY;
-				BlockRaw other = map.blocks1[index];
+			//while (index >= oneY) {
+			while (y >= 1) {
+				//index -= oneY;
+				y -= 1;
+				BlockRaw other = (BlockRaw)map.GetBlock(pos.X, y, pos.Z);
 				if (other == Block.Air || (other >= Block.Water && other <= Block.StillLava))
-					found = index;
+					found = new Vector3I(pos.X, y, pos.Z);
 				else
 					break;
 			}
-			if (found == -1) return;
+			if (found.X == -1 || found.Y == -1 || found.Z == -1) return;
 
-			int x = found % width;
-			int y = found / oneY; // posIndex / (width * length)
-			int z = (found / width) % length;
-			game.UpdateBlock(x, y, z, block);
+			//int x = found % width;
+			//int y = found / oneY; // posIndex / (width * length)
+			//int z = (found / width) % length;
+			game.UpdateBlock(found.X, found.Y, found.Z, block);
 			
-			x = start % width;
-			y = start / oneY; // posIndex / (width * length)
-			z = (start / width) % length;
-			game.UpdateBlock(x, y, z, Block.Air);
-			physics.ActivateNeighbours(x, y, z, start);
+			//x = start % width;
+			//y = start / oneY; // posIndex / (width * length)
+			//z = (start / width) % length;
+			game.UpdateBlock(pos.X, pos.Y, pos.Z, Block.Air);
+			physics.ActivateNeighbours(pos.X, pos.Y, pos.Z, start);
 		}
 	}
 }

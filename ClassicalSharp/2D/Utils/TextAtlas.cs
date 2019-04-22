@@ -68,6 +68,10 @@ namespace ClassicalSharp {
 
 			byte* digits = stackalloc byte[32];
 			int count = MakeDigits(value, digits);
+			//string intStr = value.ToString();
+			//char[] intChars = intStr.ToCharArray();
+			//Console.WriteLine(char.GetNumericValue(intChars[0]));
+			//if ('1' == intChars[0]) Console.WriteLine(intChars[0]);
 			
 			for (int i = 0; i < count; i++) {
 				Add(digits[count - 1 - i], vertices, ref index);

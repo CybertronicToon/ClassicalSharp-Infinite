@@ -80,7 +80,7 @@ namespace ClassicalSharp.Singleplayer {
 				if (DoDayNightCycle) {
 					Ticks++;
 				}
-				//physics.Tick();
+				physics.Tick();
 				game.Mode.Tick();
 				CheckAsyncResources();
 				
@@ -93,15 +93,15 @@ namespace ClassicalSharp.Singleplayer {
 						int cenChunk = game.World.ChunkHandler.ChunkArray.GetLength(0) / 2;
 						int maxChunk = game.World.ChunkHandler.ChunkArray.GetLength(0);
 						int minChunk = 0;
-						Console.WriteLine("curChunkX: " + curChunkX + ", curChunkY: " + curChunkY);
+						//Console.WriteLine("curChunkX: " + curChunkX + ", curChunkY: " + curChunkY);
 						if (curChunkX == cenChunk && curChunkY == cenChunk) {
-							Console.WriteLine("In center chunk");
-							Console.WriteLine(maxChunk);
+							//Console.WriteLine("In center chunk");
+							//Console.WriteLine(maxChunk);
 						} else if (curChunkX >= ((maxChunk - 1) + maxChunk) ||
 						           curChunkY >= ((maxChunk - 1) + maxChunk) ||
 						           curChunkX <= (minChunk - maxChunk) ||
 						           curChunkY <= (minChunk - maxChunk)) {
-							Console.WriteLine("outside max bounds");
+							//Console.WriteLine("outside max bounds");
 						}
 					}
 				}

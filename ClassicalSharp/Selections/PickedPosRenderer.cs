@@ -70,6 +70,8 @@ namespace ClassicalSharp.Renderers {
 			float dist = (camPos - selected.Min).LengthSquared;
 
 			float offset = 0.01f;
+			float offset2 = 0.0005f;
+			//offset2 *= dist;
 			if (dist < 4 * 4) offset = 0.00625f;
 			if (dist < 2 * 2) offset = 0.00500f;
 			offset = 0.00150f;
@@ -78,6 +80,10 @@ namespace ClassicalSharp.Renderers {
 			
 			Vector3 p1 = selected.Min - new Vector3(offset, offset, offset);
 			Vector3 p2 = selected.Max + new Vector3(offset, offset, offset);
+			Vector3 p3 = selected.Min - new Vector3(offset2, offset2, offset2);
+			Vector3 p4 = selected.Max + new Vector3(offset2, offset2, offset2);
+			Vector3 min = p3;
+			Vector3 max = p4;
 			
 			/*drawer.elementsPerAtlas1D = TerrainAtlas1D.elementsPerAtlas1D;
 			drawer.invVerElementSize  = TerrainAtlas1D.invElementSize;
@@ -113,6 +119,7 @@ namespace ClassicalSharp.Renderers {
 			if (dist < 2 * 2) size = 1/192f;
 
 			DrawLines(p1, p2, size);
+			DrawCracks(p3, p4, min, max);
 			oldPos = selected.BlockPos;
 		}
 		
@@ -204,15 +211,18 @@ namespace ClassicalSharp.Renderers {
 			
 		}
 		
-		Vector3 pos1, pos2;
-		void DrawLines(Vector3 p1, Vector3 p2, float size) {
-			pos1 = p1; pos2 = p2;
-			YQuad2(p1.Y, p1.X, p1.Z, p2.X, p2.Z, p2.X - p1.X, p2.Z - p1.Z, true);
-			YQuad2(p2.Y, p1.X, p1.Z, p2.X, p2.Z, p2.X - p1.X, p2.Z - p1.Z, false);
+		void DrawCracks(Vector3 p1, Vector3 p2, Vector3 min, Vector3 max) {
+			YQuad2(p1.Y, min.X, min.Z, max.X, max.Z, max.X - min.X, max.Z - min.Z, true);
+			YQuad2(p2.Y, min.X, min.Z, max.X, max.Z, max.X - min.X, max.Z - min.Z, false);
 			XQuad2(p1.X, p1.Z, p1.Y, p2.Z, p2.Y, p2.Z - p1.Z, p2.Y - p1.Y, true);
 			XQuad2(p2.X, p1.Z, p1.Y, p2.Z, p2.Y, p2.Z - p1.Z, p2.Y - p1.Y, false);
 			ZQuad2(p1.Z, p1.X, p1.Y, p2.X, p2.Y, p2.X - p1.X, p2.Y - p1.Y, false);
 			ZQuad2(p2.Z, p1.X, p1.Y, p2.X, p2.Y, p2.X - p1.X, p2.Y - p1.Y, true);
+		}
+		
+		Vector3 pos1, pos2;
+		void DrawLines(Vector3 p1, Vector3 p2, float size) {
+			pos1 = p1; pos2 = p2;
 			
 			#if USE_DX || ANDROID
 			// bottom face
